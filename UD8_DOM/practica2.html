@@ -8,13 +8,21 @@
 
   <h1>Formulario de inicio de sesión</h1>
 
-  <form onsubmit=p2() method="post">
+  <form method="post">
     <label for="email">Correo electrónico:</label><br>
-    <input type="email" id="email" name="email" required><br><br>
-    <label for="password">Contraseña:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
-    <button type="submit">Enviar</button>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <p id="errorEmail" style="color: red">
+    </p>
+    <label for="password">Contraseña:</label>
+    <br>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <p id="errorPass" style="color: red">
+    </p>
+    <br>
+    <button type="submit" id="submit" disabled>Enviar</button>
   </form>
-  <script src="practicas.js"></script>
+  <script src="practica2.js"></script>
 </body>
 </html>

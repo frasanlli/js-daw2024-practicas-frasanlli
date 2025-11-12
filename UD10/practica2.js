@@ -1,10 +1,10 @@
 let respuesta = document.getElementById("tempo")
 temporizador(2000)
 .then((res) => {
-  respuesta.textContent = res; // "Tiempo concluido"
+  respuesta.textContent = res;
 })
 .catch((err) => {
-  respuesta.textContent = err; // "El tiempo no va bien"
+  respuesta.textContent = err;
 });
 
 function temporizador(ms) {
@@ -12,13 +12,13 @@ function temporizador(ms) {
     // Temporizador principal
     const buenTiempo = setTimeout(() => {
       resolve("Tiempo concluido");
-      clearTimeout(timeoutFail);
+      clearTimeout(malTiempo);
     }, ms);
 
     // Temporizador de fallo (2 * ms)
     const malTiempo = setTimeout(() => {
       reject("El tiempo no va bien");
-      clearTimeout(timer);
+      clearTimeout(buenTiempo);
     }, 2 * ms);
   });
 }

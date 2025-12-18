@@ -12,7 +12,7 @@ function obtenerUsuario() {
   var region = document.getElementById("region");
 
   //Llamar a la api
-  fetch(`https://randomuser.me/api/`, {mode: "no-cors"})
+  fetch(`https://randomuser.me/api/`)
     //respuesta de la api
     .then((response) => {
       //Si la respuesta es correcta devolvemos los datos como un JSON para que los tome el siguiente then

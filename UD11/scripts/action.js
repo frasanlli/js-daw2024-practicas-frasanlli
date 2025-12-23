@@ -9,9 +9,16 @@ window.addEventListener("load", (ev) => {
   let boton = document.querySelector("button");
 
   boton.addEventListener("click", (ev) => {
+    var comprobarPost = document.getElementById("comprobarPost");
     ev.preventDefault();
     clearFields();
-    procesarFetch(numsecs.value, user.value);
+    if (!comprobarPost.checked){
+      console.log("Probando ejer completo")
+      procesarFetch(numsecs.value, user.value);
+    }else{
+      console.log("Probando solo POST")
+      addUsuario("1", "a@a.a", "pepe", "aaaa");
+    }
   });
 });
 
@@ -22,14 +29,14 @@ function clearFields() {
   });
 }
 
-function procesarFetch(numsecs, user) {
+async function procesarFetch(numsecs, user) {
   var statusTag = document.getElementById("status");
   var idTag = document.getElementById("id");
   var emailTag = document.getElementById("email");
   var nameTag = document.getElementById("name");
 
   //Llamar a la api
-  fetch(`${BASE_URL}${user}?delay=${numsecs}`)
+  await fetch(`${BASE_URL}${user}?delay=${numsecs}`)
     //respuesta de la api
     .then((response) => {
       //indicamos el valor del estado de la respuesta
@@ -50,8 +57,40 @@ function procesarFetch(numsecs, user) {
       idTag.textContent = usuario.id;
       emailTag.textContent = usuario.email;
       nameTag.textContent = `${usuario.first_name} ${usuario.last_name}`;
+      addUsuario(usuario.id, usuario.email, usuario.first_name, usuario.last_name);
     })
     .catch((error) => {
       console.error(`HTTP error! status: ${error.message}`);
+    });
+}
+
+async function addUsuario(id, email, nombre, apellido) {
+  var statusTag = document.getElementById("status");
+  const usuario = {
+    id_usuario: id,
+    correo: email,
+    nombre_completo: `${nombre} ${apellido}`
+  };
+
+  await fetch("https://httpbin.org/post", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(usuario),
+  })
+    .then((response) => {
+      statusTag.textContent = response.status;
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
+    })
+    .catch((error) => {
+      console.error("Error en la petición:", error);
     });
 }

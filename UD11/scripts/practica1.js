@@ -42,3 +42,4 @@ function obtenerUsuario() {
       console.error(`HTTP error! status: ${error.message}`);
     });
 }
+

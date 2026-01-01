@@ -1,24 +1,17 @@
-const BASE_URL = "https://reqres.in/api/users/";
+const BASE_URL = "https://dummyjson.com/products/";
 const POSTMAN_URL = "https://httpbin.org/post";
 
 //Código principal dentro del evento load
 // para asegurar la carga de los componentes
 window.addEventListener("load", (ev) => {
   let numsecs = document.getElementById("numsecs");
-  let user = document.getElementById("user");
+  let product_id = document.getElementById("product_id");
   let boton = document.querySelector("button");
 
   boton.addEventListener("click", (ev) => {
-    var comprobarPost = document.getElementById("comprobarPost");
     ev.preventDefault();
     clearFields();
-    if (!comprobarPost.checked){
-      console.log("Probando ejer completo")
-      procesarFetch(numsecs.value, user.value);
-    }else{
-      console.log("Probando solo POST")
-      addUsuario("1", "a@a.a", "pepe", "aaaa");
-    }
+    procesarFetch(numsecs.value, product_id.value);
   });
 });
 
@@ -29,47 +22,51 @@ function clearFields() {
   });
 }
 
-async function procesarFetch(numsecs, user) {
+async function procesarFetch(numsecs, product_id) {
   var statusTag = document.getElementById("status");
   var idTag = document.getElementById("id");
-  var emailTag = document.getElementById("email");
-  var nameTag = document.getElementById("name");
+  var titleTag = document.getElementById("title");
+  var priceTag = document.getElementById("price");
 
+  console.log(`${BASE_URL}${product_id}?delay=${numsecs}`)
   //Llamar a la api
-  await fetch(`${BASE_URL}${user}?delay=${numsecs}`)
+  await fetch(`${BASE_URL}${product_id}?delay=${numsecs}`)
     //respuesta de la api
     .then((response) => {
+      console.log(response.ok)
       //indicamos el valor del estado de la respuesta
       statusTag.textContent = response.status;
       //Si la respuesta es correcta devolvemos los datos como un JSON para que los tome el siguiente then
       if (response.ok) {
         return response.json();
-        //si no es correcta,
-      } else {
+
+      }//si no es correcta,
+      else {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     })
     .then((data) => {
-      //en este caso solo se obtiene un usuario, así que usamos el primer y único resultado de la array
-      const usuario = data.data;
-      console.log("USUARIO: " + Object.keys(usuario));
+      console.log("data "+data)
+      //en este caso solo se obtiene un producto, así que usamos el primer y único resultado de la array
+      console.log("PRODUCTO: " + Object.keys(data));
       //
-      idTag.textContent = usuario.id;
-      emailTag.textContent = usuario.email;
-      nameTag.textContent = `${usuario.first_name} ${usuario.last_name}`;
-      addUsuario(usuario.id, usuario.email, usuario.first_name, usuario.last_name);
+      idTag.textContent = data.id;
+      titleTag.textContent = data.title;
+      priceTag.textContent = `${data.price}€`;
+      addProducto(data.id, data.title, data.price);
     })
     .catch((error) => {
       console.error(`HTTP error! status: ${error.message}`);
     });
 }
 
-async function addUsuario(id, email, nombre, apellido) {
+async function addProducto(id, title, price) {
   var statusTag = document.getElementById("status");
-  const usuario = {
-    id_usuario: id,
-    correo: email,
-    nombre_completo: `${nombre} ${apellido}`
+  var titleTag = document.getElementById("title");
+  const producto = {
+    id_producto: id,
+    nombre: title,
+    precio: `${price}€`
   };
 
   await fetch("https://httpbin.org/post", {
@@ -77,7 +74,7 @@ async function addUsuario(id, email, nombre, apellido) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(usuario),
+    body: JSON.stringify(producto),
   })
     .then((response) => {
       statusTag.textContent = response.status;
@@ -89,6 +86,9 @@ async function addUsuario(id, email, nombre, apellido) {
     })
     .then((data) => {
       console.log("Respuesta del servidor:", data);
+      console.log("data.data:", data.data);
+      const objetoPosteado = JSON.parse(data.data);
+      titleTag.textContent = objetoPosteado.nombre;
     })
     .catch((error) => {
       console.error("Error en la petición:", error);

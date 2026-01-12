@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJ1</title>
+</head>
+<body>
+    <!--Ej1: Cambia el color del fondo del sitio web según la latitud del usuario: Norte: Azul. Sur:
+Verde. Ecuador: Amarillo.-->
+<p>latitud:</p>
+<p id="resultado"></p>
+</body>
+<script>
+    var resultado = document.getElementById("resultado");
+    var latitud;
+    navigator.geolocation.getCurrentPosition((pos) => {
+        latitud = pos.coords.latitude;
+        console.log(latitud)
+        resultado.textContent = latitud
+        if (latitud > 0){
+            console.log("emisferio norte")
+            document.body.style.backgroundColor = "blue"
+        }else if(latitud < 0){
+            console.log("emisferio sur")
+            document.body.style.backgroundColor = "green"
+        }else{
+            console.log("ecuador")
+            document.body.style.backgroundColor = "yellow"
+        }
+    });
+    console.log(resultado.textContent)
+    console.log(parseFloat(resultado.textContent))
+
+</script>
+</html>
